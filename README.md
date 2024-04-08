@@ -12,6 +12,6 @@ This repository contains a data science project focused on predicting house pric
 - Provides detailed documentation explaining the project workflow, data analysis, model selection, and evaluation metrics.
 - Offers visualizations and insights derived from the analysis, as well as model performance metrics.
 
-#### Project Source
+##### Project Source
 - This project was completed out of personal interest and as a way to apply the knowledge gained in data science. The project idea and dataset were inspired by resources from Code Basics, an online platform for learning data science and machine learning.
 
