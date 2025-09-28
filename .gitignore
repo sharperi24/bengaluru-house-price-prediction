@@ -1,5 +1,20 @@
 Bengaluru_House_Data.csv
 __pycache__/
-*.pyc
+*.pyc@app.route('/predict_home_price', methods=['POST'])
+def predict_home_price():
+    try:
+        data = request.get_json(force=True)
+        total_sqft = float(data['total_sqft'])
+        location = data['location']
+        bhk = int(data['bhk'])
+        bath = int(data['bath'])
+
+        estimated_price = util.get_estimated_price(location, total_sqft, bhk, bath)
+        response = jsonify({'estimated_price': estimated_price})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    except Exception as e:
+        print("Error in /predict_home_price:", e)
+        return jsonify({'error': str(e)}), 500
 *.ipynb_checkpoints
 .env
