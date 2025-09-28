@@ -3,7 +3,7 @@ from flask_cors import CORS
 from server import util 
 import os
 
-app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "./client"), static_url_path="")
+app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "../client"), static_url_path="")
 CORS(app)
 
 @app.route("/")
@@ -12,11 +12,12 @@ def index():
 
 @app.route('/get_location_names', methods=['GET'])
 def get_location_names():
+    locations = util.get_location_names()
+    print("Locations:", locations)  # Debug print
     response = jsonify({
-        'locations': util.get_location_names()
+        'locations': locations
     })
     response.headers.add('Access-Control-Allow-Origin', '*')
-
     return response
 
 @app.route('/predict_home_price', methods=['POST'])
@@ -32,7 +33,7 @@ def predict_home_price():
     })
     response.headers.add('Access-Control-Allow-Origin', '*')
 
-    return jsonify(response)
+    return response
 
 if __name__ == "__main__":
     print("Starting Python Flask Server For Home Price Prediction...")
