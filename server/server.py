@@ -19,9 +19,9 @@ def get_location_names():
 
     return response
 
-@app.route('/server/predict_home_price', methods=['GET', 'POST'])
+@app.route('/server/predict_home_price', methods=['POST'])
 def predict_home_price():
-    data = request.get_json()
+    data = request.get_json(force=True)
     total_sqft = float(data['total_sqft'])
     location = data['location']
     bhk = int(data['bhk'])
@@ -32,7 +32,7 @@ def predict_home_price():
     })
     response.headers.add('Access-Control-Allow-Origin', '*')
 
-    return response
+    return jsonify(response)
 
 if __name__ == "__main__":
     print("Starting Python Flask Server For Home Price Prediction...")
