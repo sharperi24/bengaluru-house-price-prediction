@@ -7,6 +7,10 @@ app = Flask(__name__)
 def index():
     return "Flask app is running. Use /get_location_names or /predict_home_price"
 
+@app.route('/')
+def home():
+    return "Flask app is running. Use /get_location_names or /predict_home_price"
+
 
 @app.route('/get_location_names', methods=['GET'])
 def get_location_names():
