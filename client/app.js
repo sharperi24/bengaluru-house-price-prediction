@@ -1,71 +1,63 @@
-const API_BASE = "https://<YOUR_RENDER_BACKEND_URL>";
+const API_BASE = "https://bengaluru-house-price-prediction-3-atax.onrender.com";
+
 
 function getBathValue() {
-    var uiBathrooms = document.getElementsByName("uiBathrooms");
-    for (var i = 0; i < uiBathrooms.length; i++) {
-        if (uiBathrooms[i].checked) {
-            return parseInt(i) + 1;
-        }
+    const uiBathrooms = document.getElementsByName("uiBathrooms");
+    for (let i = 0; i < uiBathrooms.length; i++) {
+        if (uiBathrooms[i].checked) return parseInt(i) + 1;
     }
-    return -1; // Invalid Value
+    return -1;
 }
 
 function getBHKValue() {
-    var uiBHK = document.getElementsByName("uiBHK");
-    for (var i = 0; i < uiBHK.length; i++) {
-        if (uiBHK[i].checked) {
-            return parseInt(i) + 1;
-        }
+    const uiBHK = document.getElementsByName("uiBHK");
+    for (let i = 0; i < uiBHK.length; i++) {
+        if (uiBHK[i].checked) return parseInt(i) + 1;
     }
-    return -1; // Invalid Value
+    return -1;
 }
 
 function onClickedEstimatePrice() {
     console.log("Estimate price button clicked");
+    const sqft = document.getElementById("uiSqft").value;
+    const bhk = getBHKValue();
+    const bathrooms = getBathValue();
+    const location = document.getElementById("uiLocations").value;
+    const estPrice = document.getElementById("uiEstimatedPrice");
 
-    var sqft = document.getElementById("uiSqft").value;
-    var bhk = getBHKValue();
-    var bathrooms = getBathValue();
-    var location = document.getElementById("uiLocations").value;
-    var estPrice = document.getElementById("uiEstimatedPrice");
-
-    var url = "https://<your-backend-service>.onrender.com/predict_home_price";
-
-    $.post(url, {
-        total_sqft: parseFloat(sqft),
-        bhk: bhk,
-        bath: bathrooms,
-        location: location
-    }, function(data, status) {
-        console.log("Response:", data);
-        if (data && data.estimated_price !== undefined) {
-            estPrice.innerHTML = "<h2>" + data.estimated_price.toString() + " Lakh</h2>";
-        } else {
-            estPrice.innerHTML = "<h2>Error in prediction</h2>";
+    $.ajax({
+        url: API_BASE + "/predict_home_price",
+        type: 'POST',
+        data: JSON.stringify({
+            total_sqft: parseFloat(sqft),
+            bhk: bhk,
+            bath: bathrooms,
+            location: location
+        }),
+        contentType: 'application/json',
+        success: function(data) {
+            estPrice.innerHTML = "<h2>" + data.estimated_price + " Lakh</h2>";
+        },
+        error: function(err) {
+            console.error(err);
+            estPrice.innerHTML = "<h2>Server error</h2>";
         }
-    }).fail(function(err) {
-        console.error("Request failed:", err);
-        estPrice.innerHTML = "<h2>Server error</h2>";
     });
 }
 
 function onPageLoad() {
-    console.log("document loaded");
-
-    var url = "https://<your-backend-service>.onrender.com/get_location_names";
-
-    $.get(url, function(data, status) {
-        console.log("Got response for get_location_names request:", data);
-        if (data && data.locations) {
-            var uiLocations = document.getElementById("uiLocations");
+    console.log("Document loaded");
+    $.get(API_BASE + "/get_location_names", function(data, status) {
+        if (data) {
+            const locations = data.locations;
+            const uiLocations = document.getElementById("uiLocations");
             $('#uiLocations').empty();
-            for (var i in data.locations) {
-                var opt = new Option(data.locations[i]);
+            $('#uiLocations').append('<option value="" disabled selected>Choose a Location</option>');
+            for (let i in locations) {
+                const opt = new Option(locations[i]);
                 $('#uiLocations').append(opt);
             }
         }
-    }).fail(function(err) {
-        console.error("Failed to load locations:", err);
     });
 }
 
