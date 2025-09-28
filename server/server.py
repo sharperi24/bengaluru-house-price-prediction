@@ -1,16 +1,12 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from server import util 
 import os
 
-app = Flask(__name__)
-@app.route('/')
+app = Flask(__name__, static_folder="../client", static_url_path="")
+
+@app.route("/")
 def index():
-    return "Flask app is running. Use /get_location_names or /predict_home_price"
-
-@app.route('/')
-def home():
-    return "Flask app is running. Use /get_location_names or /predict_home_price"
-
+    return send_from_directory(app.static_folder, "index.html")
 
 @app.route('/get_location_names', methods=['GET'])
 def get_location_names():
