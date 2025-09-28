@@ -3,7 +3,7 @@ from flask_cors import CORS
 from server import util 
 import os
 
-app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "../client"), static_url_path="")
+app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "./client"), static_url_path="")
 CORS(app)
 
 @app.route("/")
