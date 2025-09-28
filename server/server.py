@@ -6,7 +6,7 @@ app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "../
 
 @app.route("/")
 def index():
-    return send_from_directory(app.static_folder, "index.html")
+    return send_from_directory(app.static_folder, "app.html")
 
 @app.route('/get_location_names', methods=['GET'])
 def get_location_names():
