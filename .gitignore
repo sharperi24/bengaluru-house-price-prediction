@@ -1,0 +1,7 @@
+Bengaluru_House_Data.csv
+__pycache__/
+*.pyc
+artifacts/*.pickle
+artifacts/*.json
+*.ipynb_checkpoints
+.env
