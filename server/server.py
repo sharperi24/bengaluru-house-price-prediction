@@ -1,14 +1,16 @@
 from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
 from server import util 
 import os
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "../client"), static_url_path="")
+CORS(app)
 
 @app.route("/")
 def index():
     return send_from_directory(app.static_folder, "app.html")
 
-@app.route('/get_location_names', methods=['GET'])
+@app.route('/server/get_location_names', methods=['GET'])
 def get_location_names():
     response = jsonify({
         'locations': util.get_location_names()
@@ -17,7 +19,7 @@ def get_location_names():
 
     return response
 
-@app.route('/predict_home_price', methods=['GET', 'POST'])
+@app.route('/server/predict_home_price', methods=['GET', 'POST'])
 def predict_home_price():
     total_sqft = float(request.form['total_sqft'])
     location = request.form['location']

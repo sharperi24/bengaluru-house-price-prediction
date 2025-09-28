@@ -1,62 +1,72 @@
+const API_BASE = "https://<YOUR_RENDER_BACKEND_URL>";
+
 function getBathValue() {
     var uiBathrooms = document.getElementsByName("uiBathrooms");
-    for(var i in uiBathrooms) {
-      if(uiBathrooms[i].checked) {
-          return parseInt(i)+1;
-      }
+    for (var i = 0; i < uiBathrooms.length; i++) {
+        if (uiBathrooms[i].checked) {
+            return parseInt(i) + 1;
+        }
     }
     return -1; // Invalid Value
-  }
-  
-  function getBHKValue() {
+}
+
+function getBHKValue() {
     var uiBHK = document.getElementsByName("uiBHK");
-    for(var i in uiBHK) {
-      if(uiBHK[i].checked) {
-          return parseInt(i)+1;
-      }
+    for (var i = 0; i < uiBHK.length; i++) {
+        if (uiBHK[i].checked) {
+            return parseInt(i) + 1;
+        }
     }
     return -1; // Invalid Value
-  }
-  
-  function onClickedEstimatePrice() {
+}
+
+function onClickedEstimatePrice() {
     console.log("Estimate price button clicked");
-    var sqft = document.getElementById("uiSqft");
+
+    var sqft = document.getElementById("uiSqft").value;
     var bhk = getBHKValue();
     var bathrooms = getBathValue();
-    var location = document.getElementById("uiLocations");
+    var location = document.getElementById("uiLocations").value;
     var estPrice = document.getElementById("uiEstimatedPrice");
-  
-    var url = "https://<your-backend-service-name>.onrender.com/predict_home_price";//Use this if you are NOT using nginx which is first 7 tutorials
-    // var url = "/api/predict_home_price"; // Use this if  you are using nginx. i.e tutorial 8 and onwards
-  
+
+    var url = "https://<your-backend-service>.onrender.com/predict_home_price";
+
     $.post(url, {
-        total_sqft: parseFloat(sqft.value),
+        total_sqft: parseFloat(sqft),
         bhk: bhk,
         bath: bathrooms,
-        location: location.value
-    },function(data, status) {
-        console.log(data.estimated_price);
-        estPrice.innerHTML = "<h2>" + data.estimated_price.toString() + " Lakh</h2>";
-        console.log(status);
+        location: location
+    }, function(data, status) {
+        console.log("Response:", data);
+        if (data && data.estimated_price !== undefined) {
+            estPrice.innerHTML = "<h2>" + data.estimated_price.toString() + " Lakh</h2>";
+        } else {
+            estPrice.innerHTML = "<h2>Error in prediction</h2>";
+        }
+    }).fail(function(err) {
+        console.error("Request failed:", err);
+        estPrice.innerHTML = "<h2>Server error</h2>";
     });
-  }
-  
-  function onPageLoad() {
-    console.log( "document loaded" );
-     var url = "https://<your-backend-service-name>.onrender.com/get_location_names"; // Use this if you are NOT using nginx which is first 7 tutorials
-    // var url = "/api/get_location_names"; // Use this if  you are using nginx. i.e tutorial 8 and onwards
-    $.get(url,function(data, status) {
-        console.log("got response for get_location_names request");
-        if(data) {
-            var locations = data.locations;
+}
+
+function onPageLoad() {
+    console.log("document loaded");
+
+    var url = "https://<your-backend-service>.onrender.com/get_location_names";
+
+    $.get(url, function(data, status) {
+        console.log("Got response for get_location_names request:", data);
+        if (data && data.locations) {
             var uiLocations = document.getElementById("uiLocations");
             $('#uiLocations').empty();
-            for(var i in locations) {
-                var opt = new Option(locations[i]);
+            for (var i in data.locations) {
+                var opt = new Option(data.locations[i]);
                 $('#uiLocations').append(opt);
             }
         }
+    }).fail(function(err) {
+        console.error("Failed to load locations:", err);
     });
-  }
-  
-  window.onload = onPageLoad;
+}
+
+window.onload = onPageLoad;
