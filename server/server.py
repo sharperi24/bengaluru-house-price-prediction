@@ -3,6 +3,10 @@ from server import util
 import os
 
 app = Flask(__name__)
+@app.route('/')
+def index():
+    return "Flask app is running. Use /get_location_names or /predict_home_price"
+
 
 @app.route('/get_location_names', methods=['GET'])
 def get_location_names():
