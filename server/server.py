@@ -10,7 +10,7 @@ CORS(app)
 def index():
     return send_from_directory(app.static_folder, "app.html")
 
-@app.route('/server/get_location_names', methods=['GET'])
+@app.route('/get_location_names', methods=['GET'])
 def get_location_names():
     response = jsonify({
         'locations': util.get_location_names()
@@ -19,7 +19,7 @@ def get_location_names():
 
     return response
 
-@app.route('/server/predict_home_price', methods=['POST'])
+@app.route('/predict_home_price', methods=['POST'])
 def predict_home_price():
     data = request.get_json(force=True)
     total_sqft = float(data['total_sqft'])

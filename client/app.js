@@ -26,7 +26,7 @@ function onClickedEstimatePrice() {
     const estPrice = document.getElementById("uiEstimatedPrice");
 
     $.ajax({
-        url: API_BASE + "/server/predict_home_price",
+        url: API_BASE + "/predict_home_price",
         type: 'POST',
         data: JSON.stringify({
             total_sqft: parseFloat(sqft),
@@ -47,7 +47,7 @@ function onClickedEstimatePrice() {
 
 function onPageLoad() {
     console.log("Document loaded");
-    $.get(API_BASE + "/server/get_location_names", function(data, status) {
+    $.get(API_BASE + "/get_location_names", function(data, status) {
         if (data) {
             const locations = data.locations;
             const uiLocations = document.getElementById("uiLocations");
