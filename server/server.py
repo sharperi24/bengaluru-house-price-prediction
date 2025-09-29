@@ -6,6 +6,9 @@ import os
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "../client"), static_url_path="")
 CORS(app)
 
+# Ensure artifacts are loaded for all entrypoints
+util.load_saved_artifacts()
+
 @app.route("/")
 def index():
     return send_from_directory(app.static_folder, "app.html")
@@ -39,6 +42,5 @@ def predict_home_price():
 
 if __name__ == "__main__":
     print("Starting Python Flask Server For Home Price Prediction...")
-    util.load_saved_artifacts()
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
